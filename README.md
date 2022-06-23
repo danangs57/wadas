@@ -1,1 +1,1 @@
-# wadas
+# composer install && npm run dev
