@@ -20,13 +20,12 @@ class Product extends Model
     ];
 
 
-    public function category()
+  
+
+    public function transactions()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Transaction::class);
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class)->select(['name as text','id']);
-    }
+    
 }

@@ -30,14 +30,18 @@ Route::namespace('App\\Http\\Controllers\\API\V1')->group(function () {
     Route::get('profile', 'ProfileController@profile');
     Route::put('profile', 'ProfileController@updateProfile');
     Route::post('change-password', 'ProfileController@changePassword');
-    Route::get('tag/list', 'TagController@list');
+    Route::get('product/list', 'ProductController@list');
     Route::get('category/list', 'CategoryController@list');
+    Route::get('company/list', 'CompanyController@list');
     Route::post('product/upload', 'ProductController@upload');
+    Route::get('product/selling', 'ProductController@selling');
 
     Route::apiResources([
         'user' => 'UserController',
         'product' => 'ProductController',
         'category' => 'CategoryController',
         'tag' => 'TagController',
+        'company' => 'CompanyController',
+        'transaction' => 'TransactionController',
     ]);
 });

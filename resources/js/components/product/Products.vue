@@ -25,7 +25,6 @@
                       <th>ID</th>
                       <th>Name</th>
                       <th>Description</th>
-                      <th>Category</th>
                       <th>Price</th>
                       <th>Action</th>
                     </tr>
@@ -36,7 +35,6 @@
                       <td>{{product.id}}</td>
                       <td>{{product.name}}</td>
                       <td>{{product.description | truncate(30, '...')}}</td>
-                      <td>{{product.category.name}}</td>
                       <td>{{product.price}}</td>
                       <!-- <td><img v-bind:src="'/' + product.photo" width="100" alt="product"></td> -->
                       <td>
@@ -94,27 +92,6 @@
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('price') }">
                             <has-error :form="form" field="price"></has-error>
                         </div>
-                        <div class="form-group">
-
-                            <label>Category</label>
-                            <select class="form-control" v-model="form.category_id">
-                              <option 
-                                  v-for="(cat,index) in categories" :key="index"
-                                  :value="index"
-                                  :selected="index == form.category_id">{{ cat }}</option>
-                            </select>
-                            <has-error :form="form" field="category_id"></has-error>
-                        </div>
-                        <div class="form-group">
-                            <label>Tags</label>
-                            <vue-tags-input
-                              v-model="form.tag"
-                              :tags="form.tags"
-                              :autocomplete-items="filteredItems"
-                              @tags-changed="newTags => form.tags = newTags"
-                            />
-                            <has-error :form="form" field="tags"></has-error>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -142,16 +119,13 @@
                 products : {},
                 form: new Form({
                     id : '',
-                    category : '',
                     name: '',
                     description: '',
                     tags:  [],
                     photo: '',
-                    category_id: '',
                     price: '',
                     photoUrl: '',
                 }),
-                categories: [],
               
                 tag:  '',
                 autocompleteItems: [],
@@ -173,9 +147,7 @@
               axios.get("api/product").then(({ data }) => (this.products = data.data));
             // }
           },
-          loadCategories(){
-              axios.get("/api/category/list").then(({ data }) => (this.categories = data.data));
-          },
+       
           loadTags(){
               axios.get("/api/tag/list").then(response => {
                   this.autocompleteItems = response.data.data.map(a => {
@@ -281,9 +253,8 @@
             this.$Progress.start();
 
             this.loadProducts();
-            this.loadCategories();
-            this.loadTags();
-
+            // this.loadCategories();
+            
             this.$Progress.finish();
         },
         filters: {

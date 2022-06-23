@@ -26,7 +26,6 @@
                       <th>Type</th>
                       <th>Name</th>
                       <th>Email</th>
-                      <th>Email Verified?</th>
                       <th>Created</th>
                       <th>Action</th>
                     </tr>
@@ -38,7 +37,6 @@
                       <td class="text-capitalize">{{user.type}}</td>
                       <td class="text-capitalize">{{user.name}}</td>
                       <td>{{user.email}}</td>
-                      <td :inner-html.prop="user.email_verified_at | yesno"></td>
                       <td>{{user.created_at}}</td>
 
                       <td>

@@ -37,7 +37,6 @@ class ProductRequest extends FormRequest
     public function createRules(): array
     {
         return [
-            'category_id' => 'required|integer|exists:categories,id',
             'name' => 'required|string|max:191',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric',
@@ -54,7 +53,6 @@ class ProductRequest extends FormRequest
     public function updateRules(): array
     {
         return [
-            'category_id' => 'required|integer|exists:categories,id',
             'name' => 'required|string|max:191',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric',

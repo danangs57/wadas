@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Requests\Products\ProductRequest;
 use App\Models\Product;
-use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
@@ -30,7 +29,7 @@ class ProductController extends BaseController
      */
     public function index()
     {
-        $products = $this->product->latest()->with('category', 'tags')->paginate(10);
+        $products = $this->product->latest()->paginate(10);
 
         return $this->sendResponse($products, 'Product list');
     }
@@ -51,19 +50,7 @@ class ProductController extends BaseController
         ]);
 
         // update pivot table
-        $tag_ids = [];
-        foreach ($request->get('tags') as $tag) {
-            $existingtag = Tag::whereName($tag['text'])->first();
-            if ($existingtag) {
-                $tag_ids[] = $existingtag->id;
-            } else {
-                $newtag = Tag::create([
-                    'name' => $tag['text']
-                ]);
-                $tag_ids[] = $newtag->id;
-            }
-        }
-        $product->tags()->sync($tag_ids);
+        
 
         return $this->sendResponse($product, 'Product Created Successfully');
     }
@@ -76,7 +63,7 @@ class ProductController extends BaseController
      */
     public function show($id)
     {
-        $product = $this->product->with(['category', 'tags'])->findOrFail($id);
+        $product = $this->product->findOrFail($id);
 
         return $this->sendResponse($product, 'Product Details');
     }
@@ -93,21 +80,6 @@ class ProductController extends BaseController
         $product = $this->product->findOrFail($id);
 
         $product->update($request->all());
-
-        // update pivot table
-        $tag_ids = [];
-        foreach ($request->get('tags') as $tag) {
-            $existingtag = Tag::whereName($tag['text'])->first();
-            if ($existingtag) {
-                $tag_ids[] = $existingtag->id;
-            } else {
-                $newtag = Tag::create([
-                    'name' => $tag['text']
-                ]);
-                $tag_ids[] = $newtag->id;
-            }
-        }
-        $product->tags()->sync($tag_ids);
 
         return $this->sendResponse($product, 'Product Information has been updated');
     }
@@ -133,7 +105,20 @@ class ProductController extends BaseController
     {
         $fileName = time() . '.' . $request->file->getClientOriginalExtension();
         $request->file->move(public_path('upload'), $fileName);
-
         return response()->json(['success' => true]);
+    }
+
+    public function list()
+    {
+        $products = $this->product->pluck('name', 'id');
+        return $this->sendResponse($products, 'Product list');
+    }
+
+    public function selling()
+    {
+
+        $products = Product::withcount('transactions')->get();
+        return $this->sendResponse($products, 'Product list');
+        
     }
 }
